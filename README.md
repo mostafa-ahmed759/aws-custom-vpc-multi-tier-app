@@ -8,7 +8,7 @@ It's part of a hands-on capstone project to apply AWS core services.
 
 ## 🖼️ Architecture Diagram
 
-<img src="./screenshots/Architecture-digram.png" alt="Architecture Diagram" width="100%">
+<img src="screenshots/Architecture-digram.png" alt="Architecture Diagram" width="100%">
 
 ---
 
@@ -45,160 +45,154 @@ Below are the main deployment steps with corresponding screenshots from the AWS 
 
 ---
 
-### 1️⃣ VPC Creation & Configuration
+### 1️⃣ VPC Creation & Networking
 <br>
 
-<img src="./vpc-map.png" alt="Create Custom VPC" width="100%">
+<img src="screenshots/VPC.png" alt="VPC Creation" width="100%">
 
-*Creating Custom VPC using "VPC and more" with CIDR `10.0.0.0/16` and configuring subnets across Availability Zones.*
+*Custom VPC created using "VPC and more" option with CIDR `10.0.0.0/16` and subnets CIDR ranges defined.*
 
 ---
 
 ### 2️⃣ Route Tables Configuration
 <br>
 
-<img src="./screenshots/VPC.png" alt="Create Custom VPC" width="100%">
+<img src="screenshots/Private-RT1.png" alt="Private Route Table 1" width="100%">
 
-*Private Route Table 1 associated with private subnets for secure internal routing.*
+*Private Route Table 1 configured to route internet-bound traffic through NAT Gateway A.*
 
 <br>
 
-<img src="./screenshots/Private-RT2.png" alt="Private Route Table 2" width="100%">
+<img src="screenshots/Private-RT2.png" alt="Private Route Table 2" width="100%">
 
-*Private Route Table 2 configured for high availability across the second Availability Zone.*
+*Private Route Table 2 configured to route internet-bound traffic through NAT Gateway B.*
 
 ---
 
 ### 3️⃣ IAM Role for Systems Manager (SSM)
 <br>
 
-<img src="./screenshots/SSM-Role-created1.png" alt="SSM Role Created" width="100%">
+<img src="screenshots/SSM-Role-created1.png" alt="SSM Role Created" width="100%">
 
 *IAM Role created with AmazonSSMManagedInstanceCore policy attached.*
 
 <br>
 
-<img src="./screenshots/SSM-Role-to-ec2-created.png" alt="SSM Role Assigned to EC2" width="100%">
+<img src="screenshots/SSM-Role-to-ec2-created.png" alt="SSM Role Attached" width="100%">
 
-*Attaching the IAM role to EC2 instances allowing secure Session Manager access without SSH.*
+*IAM Role attached to EC2 instances to enable Session Manager access without SSH keys.*
 
 ---
 
 ### 4️⃣ EC2 Web Server Instances Deployment
 <br>
 
-<img src="./screenshots/Vpc-created.png" alt="Launch Web Server 2" width="100%">
+<img src="screenshots/create%202%20instance.png" alt="Create 2 Instances" width="100%">
 
-*Configuring and launching web-server2 instance in the private subnet.*
-
-<br>
-
-<img src="./screenshots/create%202%20instance.png" alt="Create Instances" width="100%">
-
-*Launching EC2 instances across private subnets.*
+*Launching 2 EC2 instances simultaneously into their respective private subnets.*
 
 <br>
 
-<img src="./screenshots/instance.png" alt="Instances Running" width="100%">
+<img src="screenshots/instance.png" alt="Instances Running" width="100%">
 
-*Both backend EC2 web server instances running successfully.*
-
-<br>
-
-<img src="./screenshots/Web-server1-created.png" alt="Web Server 1 Details" width="100%">
-
-*Web Server 1 details with private IP and IAM role attached.*
+*Both backend web instances initialized and in running state.*
 
 <br>
 
-<img src="./screenshots/Web-server1-created--.png" alt="Web Server 1 Summary" width="100%">
+<img src="screenshots/Web-server1-created.png" alt="Web Server 1 Creation" width="100%">
 
-*Configuration overview and summary for Web Server 1.*
+*Web_Server1 instance details and placement in private subnet 1.*
+
+<br>
+
+<img src="screenshots/Web-server1-created--.png" alt="Web Server 1 Summary" width="100%">
+
+*Configuration overview and assigned private IP for Web_Server1.*
 
 ---
 
-### 5️⃣ Web Servers Connectivity & Tests
+### 5️⃣ Web Servers Browser & Curl Tests
 <br>
 
-<img src="./screenshots/Web-server%201%20Browser%20Test.png" alt="Web Server 1 Browser Test" width="100%">
+<img src="screenshots/Web-server%201%20Browser%20Test.png" alt="Web Server 1 Test" width="100%">
 
-*Curl test to Web Server 1 private IP verifying web server response.*
+*Curl test to Web_Server1 private IP demonstrating application response via Session Manager.*
 
 <br>
 
-<img src="./screenshots/Web-server%202%20Browser%20Test.png" alt="Web Server 2 Browser Test" width="100%">
+<img src="screenshots/Web-server%202%20Browser%20Test.png" alt="Web Server 2 Test" width="100%">
 
-*Curl test to Web Server 2 private IP verifying separate zone web response.*
+*Curl test to Web_Server2 private IP demonstrating application response via Session Manager.*
 
 ---
 
 ### 6️⃣ Security Groups Configuration
 <br>
 
-<img src="./screenshots/ALB-SG-inbound.png" alt="ALB SG Inbound" width="100%">
+<img src="screenshots/ALB-SG-inbound.png" alt="ALB SG Inbound" width="100%">
 
-*ALB Security Group inbound rules allowing HTTP (port 80) traffic from anywhere.*
+*ALB Security Group inbound rules allowing HTTP (port 80) from `0.0.0.0/0`.*
 
 <br>
 
-<img src="./screenshots/ALB-SG-outbound.png" alt="ALB SG Outbound" width="100%">
+<img src="screenshots/ALB-SG-outbound.png" alt="ALB SG Outbound" width="100%">
 
-*ALB Security Group outbound rules forwarding traffic to WebSG.*
+*ALB Security Group outbound rules routing traffic exclusively to backend WebSG.*
 
 ---
 
 ### 7️⃣ Launch Template Creation
 <br>
 
-<img src="./screenshots/Create-LT.png" alt="Create Launch Template" width="100%">
+<img src="screenshots/Create-LT.png" alt="Create Launch Template" width="100%">
 
-*Configuring EC2 Launch Template with AMI, instance type, and user data bootstrap script.*
+*Configuring EC2 Launch Template with Amazon Linux AMI, t2.micro, and user data bootstrap script.*
 
 <br>
 
-<img src="./screenshots/Template-created.png" alt="Launch Template Created" width="100%">
+<img src="screenshots/Template-created.png" alt="Launch Template Created" width="100%">
 
-*Launch Template successfully created and ready for Auto Scaling deployment.*
+*Launch Template successfully created and active.*
 
 ---
 
-### 8️⃣ Target Group Configuration
+### 8️⃣ Target Group Setup
 <br>
 
-<img src="./screenshots/TG-targets-testing.png" alt="Target Group Created" width="100%">
+<img src="screenshots/TG-targets-testing.png" alt="Target Group Setup" width="100%">
 
-*Successfully created the target group (Web-TG) for routing traffic to backend instances.*
+*Target Group (`Web-TG`) registered targets showing healthy status across web servers.*
 
 ---
 
 ### 9️⃣ Auto Scaling Group (ASG) Setup
 <br>
 
-<img src="./screenshots/Create-ASG.png" alt="Create ASG" width="100%">
+<img src="screenshots/Create-ASG.png" alt="Create ASG" width="100%">
 
-*Creating Auto Scaling Group using the defined Launch Template.*
-
-<br>
-
-<img src="./screenshots/Create-ASG-instance.png" alt="ASG Instance Sizing" width="100%">
-
-*Configuring group capacity (Desired, Minimum, Maximum instances).*
+*Creating Auto Scaling Group using the Launch Template.*
 
 <br>
 
-<img src="./screenshots/Auto-Scaleing-Group-networking.png" alt="ASG Networking" width="100%">
+<img src="screenshots/Create-ASG-instance.png" alt="ASG Capacity" width="100%">
 
-*Configuring ASG networking across VPC private subnets.*
+*Setting ASG capacity (Desired, Minimum, and Maximum instances).*
 
 <br>
 
-<img src="./screenshots/Auto-scaleing-Group-manual.png" alt="ASG Manual Scaling" width="100%">
+<img src="screenshots/Auto-Scaleing-Group-networking.png" alt="ASG Networking" width="100%">
+
+*Configuring ASG networking across VPC private subnets and target group.*
+
+<br>
+
+<img src="screenshots/Auto-scaleing-Group-manual.png" alt="ASG Manual Scaling" width="100%">
 
 *Configuring manual scaling policies for ASG.*
 
 <br>
 
-<img src="./screenshots/Auto-scaling-Group-activity-history.png" alt="ASG Activity History" width="100%">
+<img src="screenshots/Auto-scaling-Group-activity-history.png" alt="ASG Activity History" width="100%">
 
 *ASG activity history confirming instances launching successfully.*
 
@@ -207,23 +201,22 @@ Below are the main deployment steps with corresponding screenshots from the AWS 
 ### 🔟 Application Load Balancer & High Availability Tests
 <br>
 
-<img src="./screenshots/ALB-Browser-test1.png" alt="ALB Browser Test 1" width="100%">
+<img src="screenshots/ALB-Browser-test1.png" alt="ALB Test 1" width="100%">
 
-*Application Load Balancer directing traffic to Web Server 1.*
-
-<br>
-
-<img src="./screenshots/ALB-Browser-test%202.png" alt="ALB Browser Test 2" width="100%">
-
-*Application Load Balancer balancing traffic to Web Server 2.*
+*Application Load Balancer DNS directing traffic to Web Server 1.*
 
 <br>
 
-<img src="./screenshots/ALB-browser-final-testing.png" alt="ALB Final Testing" width="100%">
+<img src="screenshots/ALB-Browser-test%202.png" alt="ALB Test 2" width="100%">
 
-*Final browser test confirming high availability across all instances.*
+*Application Load Balancer directing traffic to Web Server 2.*
 
----
+<br>
+
+<img src="screenshots/ALB-browser-final-testing.png" alt="ALB Final Testing" width="100%">
+
+*Final browser test confirming high availability and automated traffic distribution.*
+
 ---
 
 ## 🌍 Final Result
