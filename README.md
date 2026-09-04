@@ -45,12 +45,12 @@ Below are the main deployment steps with corresponding screenshots from the AWS 
 
 ---
 
-### 1️⃣ VPC & Networking Overview
+### 1️⃣ VPC Creation & Configuration
 <br>
 
-<img src="./screenshots/VPC_%20us-east-1%20-%20Google%20Chrome%2004_09_2026%2006_43_16%20%D9%85.png" alt="VPC Resource Map" width="100%">
+<img src="./vpc-map.png" alt="Create Custom VPC" width="100%">
 
-*Custom VPC resource map and subnet distribution across Availability Zones.*
+*Creating Custom VPC using "VPC and more" with CIDR `10.0.0.0/16` and configuring subnets across Availability Zones.*
 
 ---
 
