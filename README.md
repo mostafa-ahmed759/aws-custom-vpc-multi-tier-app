@@ -57,7 +57,7 @@ Below are the main deployment steps with corresponding screenshots from the AWS 
 ### 2️⃣ Route Tables Configuration
 <br>
 
-<img src="./screenshots/Private-RT1.png" alt="Private Route Table 1" width="100%">
+<img src="./screenshots/VPC.png" alt="Create Custom VPC" width="100%">
 
 *Private Route Table 1 associated with private subnets for secure internal routing.*
 
