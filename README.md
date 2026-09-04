@@ -44,85 +44,53 @@ It's part of a hands-on capstone project to apply AWS core services.
 Below are the main deployment steps with corresponding screenshots from the AWS Console.
 
 ### 1️⃣ VPC Creation
-![VPC Creation](./screenshots/Vpc-created.png)  
 Custom VPC created with CIDR `10.0.0.0/16` and subnets CIDR ranges defined.
-
-![VPC Overview](./screenshots/VPC_%20us-east-1%20-%20Google%20Chro....png)  
-VPC resource map and subnet distribution across Availability Zones.
+![VPC Creation](./screenshots/Vpc-created.png)
 
 ### 2️⃣ Private Route Tables
-![Private RT 1](./screenshots/Private-RT1.png)  
-Private Route Table configured to route internet-bound traffic through NAT Gateway.
-
-![Private RT 2](./screenshots/Private-RT2.png)  
-Secondary Private Route Table configured for the second Availability Zone.
+Private Route Tables configured for internal routing and NAT Gateway traffic.
+![Private RT 1](./screenshots/Private-RT1.png)
+![Private RT 2](./screenshots/Private-RT2.png)
 
 ### 3️⃣ IAM Role for Systems Manager (SSM)
-![SSM Role](./screenshots/SSM-Role-created1.png)  
-IAM Role created with AmazonSSMManagedInstanceCore policy attached.
+IAM Role configured with necessary permissions to allow EC2 instances to communicate via SSM.
+![SSM Role](./screenshots/SSM-Role-created1.png)
+![SSM Role EC2](./screenshots/SSM-Role-to-ec2-created.png)
 
-![SSM Role to EC2](./screenshots/SSM-Role-to-ec2-created.png)  
-Attaching the IAM role to EC2 instances allowing secure Session Manager access.
+### 4️⃣ Web Server Instances Details
+Instances deployed across the private subnets.
+![Instances](./screenshots/instance.png)
+![Web Server 1](./screenshots/Web-server1-created.png)
 
-### 4️⃣ EC2 Web Server Instances
-![Create 2 Instances](./screenshots/create%202%20instance.png)  
-Launching two EC2 instances into their respective private subnets.
-
-![Web Server 1 Created](./screenshots/Web-server1-created.png)  
-Details of Web_Server1 instance in the first private subnet.
-
-![Web Server 1 Summary](./screenshots/Web-server1-created--.png)  
-Configuration summary of Web_Server1 including private IP and IAM role.
-
-### 5️⃣ Web Servers Browser & Curl Tests
-![Web Server 1 Test](./screenshots/Web-server%201%20Browser%20Test.png)  
-Curl test to Web_Server1 private IP verifying web application HTML response.
-
-![Web Server 2 Test](./screenshots/Web-server%202%20Browser%20Test.png)  
-Curl test to Web_Server2 private IP verifying separate zone web response.
+### 5️⃣ Web Servers Browser / Curl Tests
+Verifying application response and network connectivity from both backend servers.
+![Web Server 1 Test](./screenshots/Web-server%201%20Browser%20Test.png)
+![Web Server 2 Test](./screenshots/Web-server%202%20Browser%20Test.png)
 
 ### 6️⃣ Security Groups Configuration
-![ALB SG Inbound](./screenshots/ALB-SG-inbound.png)  
-ALB Security Group inbound rules allowing HTTP (port 80) traffic from anywhere.
+Security Group rules restricting access to backend instances and allowing public access to ALB.
+![ALB SG Inbound](./screenshots/ALB-SG-inbound.png)
+![ALB SG Outbound](./screenshots/ALB-SG-outbound.png)
 
-![ALB SG Outbound](./screenshots/ALB-SG-outbound.png)  
-ALB Security Group outbound rules routing traffic exclusively to backend WebSG.
+### 7️⃣ Launch Template & Auto Scaling Group Creation
+Launch Template configured and Auto Scaling Group initialized.
+![Create LT](./screenshots/Create-LT.png)
+![Template Created](./screenshots/Template-created.png)
+![Create ASG](./screenshots/Create-ASG.png)
+![Create ASG Instance](./screenshots/Create-ASG-instance.png)
 
-### 7️⃣ Launch Template Creation
-![Create LT](./screenshots/Create-LT.png)  
-Configuring Launch Template settings, AMI, instance sizing, and user data bootstrap script.
-
-![Template Created](./screenshots/Template-created.png)  
-Launch Template successfully created and active.
-
-### 8️⃣ Auto Scaling Group (ASG) Setup
-![Create ASG](./screenshots/Create-ASG.png)  
-Creating Auto Scaling Group using the defined Launch Template.
-
-![Create ASG Instance Capacity](./screenshots/Create-ASG-instance.png)  
-Setting ASG capacity (Desired, Minimum, Maximum instances).
-
-![ASG Networking](./screenshots/Auto-Scaleing-Group-networkin....png)  
-Configuring ASG networking with VPC private subnets and load balancer target group.
-
-![ASG Manual](./screenshots/Auto-scaleing-Group-manual.png)  
-Auto Scaling Group configured with manual scaling options.
-
-![ASG Activity History](./screenshots/Auto-scaling-Group-activity-his....png)  
-ASG Activity History confirming instances launching successfully.
+### 8️⃣ Auto Scaling Group Networking & Manual Scaling
+Auto Scaling Group scaling configuration, networking setup, and activity history.
+![ASG Networking](./screenshots/Auto-Scaleing-Group-networkin....png)
+![ASG Manual](./screenshots/Auto-scaleing-Group-manual.png)
+![ASG Activity History](./screenshots/Auto-scaling-Group-activity-his....png)
 
 ### 9️⃣ Target Group & Load Balancer Testing
-![TG Targets Testing](./screenshots/TG-targets-testing.png)  
-Target Group registered targets showing Healthy status across web instances.
-
-![ALB Test 1](./screenshots/ALB-Browser-test1.png)  
-Load Balancer DNS resolving and directing traffic to the first server.
-
-![ALB Test 2](./screenshots/ALB-Browser-test%202.png)  
-Load Balancer directing traffic to the second server showing load balancing in action.
-
-![ALB Final Testing](./screenshots/ALB-browser-final-testing.png)  
-Final browser testing confirming balanced requests across scaled instances.
+Target Group health checks healthy and Application Load Balancer distributing HTTP requests.
+![TG Targets Testing](./screenshots/TG-targets-testing.png)
+![ALB Test 1](./screenshots/ALB-Browser-test1.png)
+![ALB Test 2](./screenshots/ALB-Browser-test%202.png)
+![ALB Final Testing](./screenshots/ALB-browser-final-testing.png)
 
 ---
 
@@ -136,8 +104,8 @@ After the ALB and ASG setup, the application is served securely from private EC2
 
 | Security Group | Inbound Rules | Outbound Rules |
 | :--- | :--- | :--- |
-| **WebSG** | HTTP 80 | from `ALBSG` | Allow all |
-| **ALBSG** | HTTP 80 | from `0.0.0.0/0` | HTTP 80 to `WebSG` |
+| **WebSG** | HTTP (80) from `ALBSG` | Allow all |
+| **ALBSG** | HTTP (80) from `0.0.0.0/0` | HTTP (80) to `WebSG` |
 
 ---
 
@@ -145,7 +113,7 @@ After the ALB and ASG setup, the application is served securely from private EC2
 
 To avoid charges:
 * Delete EC2 Instances and Auto Scaling Group.
-* Delete NAT Gateways and release Elastic IPs (EIPs).
+* Delete NAT Gateways and release Elastic IPs.
 * Delete ALB and Target Group.
-* Delete the Custom VPC.
+* Delete Custom VPC.
 *
