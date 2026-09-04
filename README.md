@@ -6,6 +6,12 @@ It's part of a hands-on capstone project to apply AWS core services.
 
 ---
 
+## 🖼️ Architecture Diagram
+
+![Architecture Diagram](./screenshots/Architecture-digram.png)
+
+---
+
 ## 📐 Architecture Overview
 
 * **Custom VPC with CIDR block:** `10.0.0.0/16`
